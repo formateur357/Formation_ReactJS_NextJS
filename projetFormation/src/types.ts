@@ -10,3 +10,9 @@ export interface Skill {
   icon: string;
   description: string;
 }
+
+export interface TaskInterface {
+  id: number;
+  title: string;
+  done: boolean;
+}
