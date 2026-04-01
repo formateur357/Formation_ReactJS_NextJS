@@ -11,8 +11,10 @@ export interface Skill {
   description: string;
 }
 
-export interface TaskInterface {
+export interface Todo {
   id: number;
   title: string;
   done: boolean;
 }
+
+export type filter = "all" | "active" | "done";

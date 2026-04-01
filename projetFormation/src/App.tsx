@@ -1,7 +1,10 @@
 import Header from "./components/Header/Header";
 import Card from "./components/Card/Card";
-import type { NavLink, Skill } from "./types";
+import type { filter, NavLink, Skill, Todo } from "./types";
 import "./App.css";
+import React from "react";
+import Task from "./components/Task/Task";
+import PageTitle from "./components/Title";
 
 // Tableau de données typé : chaque objet doit respecter l'interface Skill.
 const skills: Skill[] = [
@@ -43,6 +46,61 @@ const links: NavLink[] = [
 ];
 
 function App() {
+  const [todos, setTodos] = React.useState<Todo[]>([
+    { id: 1, title: "Apprendre React", done: false },
+    { id: 2, title: "Créer un portfolio", done: true },
+    { id: 3, title: "Maitriser les hooks", done: false }
+  ]);
+
+  const [filter, setFilter] = React.useState<filter>("all");
+  const [newTitle, setNewTitle] = React.useState<string>("");
+
+  const addTodo = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const cleanTitle = newTitle.trim();
+
+    if (!cleanTitle) return;
+
+    setTodos((prev) => [
+      ...prev,
+      { id: Date.now(), title: cleanTitle, done: false }
+    ]);
+
+  };
+
+  const editTodo = (id: number, newTitle: string) => {
+    const cleanTitle = newTitle.trim();
+
+    if (!cleanTitle) return;
+
+    setTodos((prev) =>
+      prev.map((todo) =>
+        todo.id === id ? { ...todo, title: cleanTitle } : todo
+      )
+    );
+  }
+
+  const deleteTodo = (id: number) => {
+    setTodos((prev) => prev.filter((todo) => todo.id !== id));
+  };
+
+  const toggleDone = (id: number) => {
+    setTodos((prev) =>
+      prev.map((todo) =>
+        todo.id === id ? { ...todo, done: !todo.done } : todo
+      )
+    );
+  }
+
+  const remaining = todos.filter((todo) => !todo.done).length;
+
+  const filteredTodos = todos.filter((todo) => {
+    if (filter === "active") return !todo.done;
+    if (filter === "done") return todo.done;
+    return true;
+  });
+
   return (
     <>
       <Header
@@ -50,6 +108,7 @@ function App() {
         subtitle="Développeur Front-End"
         links={links}
       />
+
 
       <main className="container">
         <section className="hero">
@@ -73,6 +132,36 @@ function App() {
         <section id="contact" className="contact">
           <h2 className="section-title">Contact</h2>
           <p>email@example.com</p>
+        </section>
+
+        <section className="todos">
+          <h2 className="section-title">Mes Tâches</h2>
+
+          <form onSubmit={addTodo}>
+            <input
+              type="text"
+              value={newTitle}
+              onChange={(e) => setNewTitle(e.target.value)}
+              placeholder="Nouvelle tâche..."
+            />
+            <button type="submit">Ajouter</button>
+          </form>
+          <PageTitle title="Mon Portfolio" />
+
+
+          <div>
+            <button onClick={() => setFilter("all")}>Toutes</button>
+            <button onClick={() => setFilter("active")}>Actives</button>
+            <button onClick={() => setFilter("done")}>Terminées</button>
+          </div>
+
+          <p>{remaining} tâche{remaining > 1 ? "s" : ""} restante{remaining > 1 ? "s" : ""}</p>
+
+          <ul>
+            {filteredTodos.map((todo) => (
+              <Task key={todo.id} todo={todo} onToggle={toggleDone} onDelete={deleteTodo} onEdit={editTodo} />
+            ))}
+          </ul>
         </section>
       </main>
     </>
