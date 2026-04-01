@@ -1,0 +1,59 @@
+Fonctionnalités à ajouter
+
+Vous devez ajouter les fonctionnalités suivantes à l’application existante.
+
+1. Ajouter une tâche
+
+L’application doit permettre à l’utilisateur de saisir une nouvelle tâche dans un champ texte puis de l’ajouter à la liste.
+
+Contraintes :
+
+le champ doit être contrôlé par React,
+une tâche vide ne doit pas être ajoutée,
+après ajout, le champ doit être vidé.
+2. Marquer une tâche comme terminée
+
+Chaque tâche affichée dans la liste doit pouvoir être cochée ou décochée.
+
+Attendu :
+
+si une tâche est marquée comme terminée, son état change,
+si on reclique, elle redevient active.
+3. Supprimer une tâche
+
+Chaque tâche doit pouvoir être supprimée individuellement.
+
+Attendu :
+
+un bouton de suppression doit être disponible sur chaque tâche,
+la suppression doit retirer immédiatement la tâche de la liste.
+4. Modifier une tâche inline
+
+L’utilisateur doit pouvoir modifier le texte d’une tâche directement dans la liste.
+
+Attendu :
+
+un mode édition doit être prévu,
+la modification doit concerner uniquement la tâche choisie,
+une valeur vide ne doit pas remplacer le titre existant.
+5. Afficher le nombre de tâches restantes
+
+L’application doit afficher combien de tâches ne sont pas encore terminées.
+
+Exemple :
+
+0 tâche restante
+1 tâche restante
+2 tâches restantes
+6. Filtrer les tâches affichées
+
+L’utilisateur doit pouvoir choisir d’afficher :
+
+toutes les tâches,
+uniquement les tâches actives,
+uniquement les tâches terminées.
+
+Important :
+
+le filtre ne doit pas modifier définitivement les données,
+il doit seulement modifier l’affichage.
