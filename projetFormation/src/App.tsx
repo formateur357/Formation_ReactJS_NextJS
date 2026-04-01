@@ -2,7 +2,7 @@ import Header from "./components/Header/Header";
 import Card from "./components/Card/Card";
 import type { filter, NavLink, Skill, Todo } from "./types";
 import "./App.css";
-import React from "react";
+import React, { useEffect } from "react";
 import Task from "./components/Task/Task";
 import PageTitle from "./components/Title";
 
@@ -55,6 +55,21 @@ function App() {
   const [filter, setFilter] = React.useState<filter>("all");
   const [newTitle, setNewTitle] = React.useState<string>("");
 
+  const inputRef = React.useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    // const savedTodos = localStorage.getItem("todos");
+
+    // if (savedTodos) {
+    //   setTodos(JSON.parse(savedTodos));
+    // }
+      inputRef.current?.focus();  
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }, [todos]);
+
   const addTodo = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -67,6 +82,8 @@ function App() {
       { id: Date.now(), title: cleanTitle, done: false }
     ]);
 
+    setNewTitle("");
+    inputRef.current?.focus();
   };
 
   const editTodo = (id: number, newTitle: string) => {
@@ -109,7 +126,6 @@ function App() {
         links={links}
       />
 
-
       <main className="container">
         <section className="hero">
           <h2>Bienvenue</h2>
@@ -139,6 +155,7 @@ function App() {
 
           <form onSubmit={addTodo}>
             <input
+              ref={inputRef}
               type="text"
               value={newTitle}
               onChange={(e) => setNewTitle(e.target.value)}
