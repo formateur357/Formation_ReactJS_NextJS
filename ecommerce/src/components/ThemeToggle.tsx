@@ -1,7 +1,7 @@
 import { useShopStore } from "../store/useShopStore";
 
 export default function ThemeToggle() {
-    const { theme, toggleTheme } = useShopStore((state) => state.theme);
+    const theme = useShopStore((state) => state.theme);
     const toggleTheme = useShopStore((state) => state.toggleTheme);
 
     return (

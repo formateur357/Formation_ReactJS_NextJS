@@ -1,4 +1,3 @@
-import { use } from "react";
 import type { Product } from "../types/Product";
 import { formatPrice } from "../utils/formatPrice";
 import { useShopStore } from "../store/useShopStore";
@@ -18,6 +17,7 @@ export function ProductCard({ product }: ProductCardProps) {
             <p><strong>Catégorie :</strong> {product.category}</p>
             <p><strong>Prix :</strong>${formatPrice(product.price)}</p>
 
-            <button onClick={() => addToCart(product)}>Ajouter au Panier</button>
+            <button onClick={() => addToCart({ ...product, quantity: 1 })}>Ajouter au Panier</button>
         </article>
+    )
 }
