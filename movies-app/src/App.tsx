@@ -1,23 +1,19 @@
-import { useEffect, useMemo, useState } from 'react'
-import './App.css'
-import { useLocalStorage } from './hooks/useLocalStorage'
-import { useDebounce } from './hooks/useDebounce'
-import { usePopularMovies, useSearchMovies } from './hooks/useMovies';
-import MovieCard from './components/MovieCard';
+import { useMemo, useState } from "react";
+import  MovieCard from "./components/MovieCard";
+import { useDebounce } from "./hooks/useDebounce";
+import { useLocalStorage } from "./hooks/useLocalStorage";
+import { usePopularMovies, useSearchMovies } from "./hooks/useMovies";
 
 function App() {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
-  const [favorites, setFavorites] = useLocalStorage<string[]>("favorites", []); // Stocke les IDs des films favoris
-  const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
-
-   // Mauvaise pratique : modifie l'état à chaque rendu, provoquant une boucle infinie
+  const [favorites, setFavorites] = useLocalStorage<number[]>(
+    "favorite-movies",
+    []
+  );
+  const [showOnlyFavorites, setShowOnlyFavorites] = useState(false);
 
   const debouncedSearch = useDebounce(search, 500);
-
-  useEffect(() => {
-    setPage(1); // Réinitialise la page à 1 à chaque changement de recherche
-  }, [debouncedSearch]);
 
   const isSearchMode = debouncedSearch.trim().length >= 2;
 
@@ -29,22 +25,23 @@ function App() {
   const movies = activeQuery.data?.results ?? [];
   const totalPages = activeQuery.data?.total_pages ?? 1;
 
+  function toggleFavorite(movieId: number) {
+    setFavorites((prevFavorites) => {
+      if (prevFavorites.includes(movieId)) {
+        return prevFavorites.filter((id) => id !== movieId);
+      }
+
+      return [...prevFavorites, movieId];
+    });
+  }
+
   const displayedMovies = useMemo(() => {
-    if (!showFavoritesOnly) {
+    if (!showOnlyFavorites) {
       return movies;
     }
 
     return movies.filter((movie) => favorites.includes(movie.id));
-  }, [movies, showFavoritesOnly, favorites]);
-
-  function toggleFavorite(movieId: number) {
-    const movieIdStr = String(movieId);
-    if (favorites.includes(movieIdStr)) {
-      setFavorites(favorites.filter((id: string) => id !== movieIdStr));
-    } else {
-      setFavorites([...favorites, movieIdStr]);
-    }
-  }
+  }, [movies, favorites, showOnlyFavorites]);
 
   return (
     <main className="app">
@@ -58,18 +55,21 @@ function App() {
           type="text"
           placeholder="Rechercher un film..."
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) => {
+            setSearch(e.target.value);
+            setPage(1);
+          }}
         />
-      </section>
 
-      <label className="favorites-filter">
-        <input
-          type="checkbox"
-          checked={showFavoritesOnly}
-          onChange={(e) => setShowFavoritesOnly(e.target.checked)}
-        />
-        Afficher uniquement les favoris
-      </label>
+        <label className="favorites-filter">
+          <input
+            type="checkbox"
+            checked={showOnlyFavorites}
+            onChange={(e) => setShowOnlyFavorites(e.target.checked)}
+          />
+          Afficher seulement les favoris
+        </label>
+      </section>
 
       {activeQuery.isLoading && <p>Chargement...</p>}
       {activeQuery.isError && <p>Erreur : {activeQuery.error.message}</p>}
@@ -116,4 +116,4 @@ function App() {
   );
 }
 
-export default App
+export default App;

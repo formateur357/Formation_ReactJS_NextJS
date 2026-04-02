@@ -1,22 +1,41 @@
 import { getPosterUrl } from "../api/movies";
+import type { Movie } from "../types";
 
-function MovieCard({ movie, isFavorite, onToggleFavorite }: { movie: any; isFavorite: boolean; onToggleFavorite: () => void}) {
-    const releaseYear = movie.release_date ? movie.release_date.slice(0, 4) : "N/A";
+interface MovieCardProps {
+  movie: Movie;
+  isFavorite: boolean;
+  onToggleFavorite: (movieId: number) => void;
+}
 
-    return (
-        <article className={`movie-card ${isFavorite ? "movie-card--favorite" : ""}`}>
-            <img src={getPosterUrl(movie.poster_path)} alt={movie.title} className="movie-card_image"/>
+function MovieCard({ movie, isFavorite, onToggleFavorite }: MovieCardProps) {
+  const releaseYear = movie.release_date
+    ? movie.release_date.slice(0, 4)
+    : "N/A";
 
-            <div className="movie-card_content">
-                <h2>{movie.title}</h2>
-                <p>Année : {releaseYear}</p>
-                <p>Note : {movie.vote_average?.toFixed(1) ?? "N/A"}</p>
-                <button onClick={onToggleFavorite} className={`movie-card_button ${isFavorite ? "movie-card_button--favorite" : ""}`}>
-                    {isFavorite ? "Retirer des Favoris" : "Ajouter aux Favoris"}
-                </button>
-            </div>
-        </article>
-    )
+  return (
+    <article className={`movie-card ${isFavorite ? "movie-card--favorite" : ""}`}>
+      <img
+        src={getPosterUrl(movie.poster_path)}
+        alt={movie.title}
+        className="movie-card__image"
+      />
+
+      <div className="movie-card__content">
+        <h2>{movie.title}</h2>
+        <p>Année : {releaseYear}</p>
+        <p>Note : {movie.vote_average?.toFixed(1) ?? "N/A"}</p>
+
+        <button
+          className={`movie-card__button ${
+            isFavorite ? "movie-card__button--favorite" : ""
+          }`}
+          onClick={() => onToggleFavorite(movie.id)}
+        >
+          {isFavorite ? "Retirer des favoris" : "Ajouter aux favoris"}
+        </button>
+      </div>
+    </article>
+  );
 }
 
 export default MovieCard;
