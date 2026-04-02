@@ -9,6 +9,10 @@ export default function MainLayout() {
 
                 <nav className="site-nav">
                     <NavLink to="/">Accueil</NavLink>
+                    <NavLink to="/blog">Blog</NavLink>
+                    <NavLink to="/about">À propos</NavLink>
+                    <NavLink to="/profile">Profil</NavLink>
+                    <NavLink to="/login">Connexion</NavLink>
                 </nav>
             </header>
 

@@ -14,7 +14,7 @@ export default function HomePage() {
             {latestPosts.map(post => (
                 <article key={post.id} className="card">
                     <h4>{post.title}</h4>
-                    <p>{post.content}</p>
+                    <p>{post.extract}</p>
                     <Link to={`/blog/${post.slug}`}>Lire l'article</Link>
                 </article>
             ))}
